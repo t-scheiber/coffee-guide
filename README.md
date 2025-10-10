@@ -90,7 +90,7 @@ The workflow file is located at `.github/workflows/deploy.yml` and is configured
 ## 📂 Project Structure
 
 ```
-src/app/
+app/
   ├── beans/
   │   ├── gota-blend/
   │   │   ├── integrated-grinder/
@@ -106,10 +106,10 @@ src/app/
 
 To add a new bean variety:
 
-1. Create a new folder under `src/app/beans/[bean-name]/`
+1. Create a new folder under `app/beans/[bean-name]/`
 2. Add two subfolders: `integrated-grinder/` and `timemore-sculptor/`
 3. Copy a `page.tsx` from an existing guide and modify the settings
-4. Update the home page (`src/app/page.tsx`) to add links to the new guides
+4. Update the home page (`app/page.tsx`) to add links to the new guides
 
 ## 🛠️ Tech Stack
 
