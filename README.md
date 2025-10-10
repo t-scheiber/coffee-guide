@@ -64,6 +64,29 @@ npm run build
 
 Open [http://localhost:3000](http://localhost:3000) to view the app in development mode.
 
+## 🚀 Automated Deployment
+
+This project uses GitHub Actions for automated deployment to an FTP server. Every time you push to the `main` branch, the workflow will:
+
+1. **Install dependencies** using `npm ci`
+2. **Build the static site** using `npm run build` 
+3. **Deploy to FTP server** automatically
+
+### Setup FTP Deployment
+
+To enable automatic deployment, add these secrets to your GitHub repository:
+
+1. Go to **Settings** → **Secrets and variables** → **Actions**
+2. Add these repository secrets:
+   - `FTP_SERVER` - Your FTP server address
+   - `FTP_USERNAME` - Your FTP username  
+   - `FTP_PASSWORD` - Your FTP password
+
+The workflow file is located at `.github/workflows/deploy.yml` and is configured to:
+- Deploy the `out/` directory (Next.js static export output)
+- Exclude unnecessary files (git, node_modules, etc.)
+- Run on every push to the main branch
+
 ## 📂 Project Structure
 
 ```
