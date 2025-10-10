@@ -1,0 +1,9 @@
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="192" height="192" rx="24" fill="#8B4513"/>
+  <path d="M96 32C96 32 128 48 128 80C128 112 96 128 96 128C96 128 64 112 64 80C64 48 96 32 96 32Z" fill="#D2691E"/>
+  <path d="M96 32C96 32 112 40 112 80C112 120 96 128 96 128C96 128 80 120 80 80C80 40 96 32 96 32Z" fill="#CD853F"/>
+  <circle cx="96" cy="80" r="8" fill="#FFFFFF"/>
+  <path d="M88 88C88 88 96 96 104 88" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+  <rect x="84" y="100" width="24" height="8" rx="4" fill="#FFFFFF"/>
+  <text x="96" y="150" text-anchor="middle" fill="#FFFFFF" font-family="Arial, sans-serif" font-size="16" font-weight="bold">COFFEE</text>
+</svg>
