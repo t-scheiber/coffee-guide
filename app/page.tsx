@@ -76,7 +76,7 @@ export default function HomePage() {
               Sage Barista Touch built-in grinder
             </p>
             <div className="mt-4 pt-4 border-t border-purple-200">
-              <span className="text-xs text-purple-700 font-medium">Chocolatey & sweet</span>
+              <span className="text-xs text-purple-700 font-medium">Chocolatey &amp; sweet</span>
             </div>
           </Link>
 
