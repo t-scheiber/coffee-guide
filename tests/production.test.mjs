@@ -29,6 +29,9 @@ test('production guides, navigation and assets work', {timeout: 60000}, async t 
   assert.equal(home?.status, 200, 'home page responds');
   const html = await home.text();
   assert.match(html, /<h1\b[^>]*>[\s\S]*?Coffee Guide[\s\S]*?<\/h1>/);
+  assert.doesNotMatch(html, /(?:<|&lt;)generated(?:>|&gt;)/, 'no placeholder icon metadata');
+  assert.doesNotMatch(html, /&amp;apos;/, 'JSX apostrophes do not render as literal entities');
+  assert.match(html, /You(?:&#x27;|&#39;|&apos;|')ll/, 'home apostrophe is HTML-encoded correctly');
   const routes = [
     ['/beans/gota-blend/integrated-grinder', 'Gota Blend', 'Integrated Grinder'],
     ['/beans/gota-blend/timemore-sculptor', 'Gota Blend', 'Timemore Sculptor'],
@@ -39,7 +42,7 @@ test('production guides, navigation and assets work', {timeout: 60000}, async t 
   const collectAssets = body => {
     for (const match of body.matchAll(/(?:src|href)="([^"<>]+)"/g)) {
       const url = match[1].replaceAll('&amp;', '&');
-      if (url.startsWith('/_next/') || url.startsWith('/images/')) assets.add(url);
+      if (url.startsWith('/_next/') || url.startsWith('/images/') || /^\/(?:favicon\.ico|icon\.svg|apple-icon\.png)(?:\?|$)/.test(url)) assets.add(url);
     }
   };
   collectAssets(html);
@@ -52,8 +55,11 @@ test('production guides, navigation and assets work', {timeout: 60000}, async t 
     assert.ok(heading?.includes(bean) && heading.includes(grinder), `correct guide at ${route}`);
     assert.ok(page.includes('href="/"'), 'guide has a home link');
     assert.match(page, /<table\b/, 'brewing settings render');
+    assert.doesNotMatch(page, /(?:<|&lt;)generated(?:>|&gt;)/, 'guide has no placeholder metadata');
+    assert.doesNotMatch(page, /&amp;apos;/, 'guide apostrophes render correctly');
     collectAssets(page);
   }
+  for (const icon of ['/favicon.ico', '/icon.svg', '/apple-icon.png']) assert.ok([...assets].some(url => url.split('?')[0] === icon), `Next emits ${icon}`);
   assert.ok(assets.size > 3, 'styles, scripts and guide images are emitted');
   for (const asset of assets) {
     const response = await get(asset);
