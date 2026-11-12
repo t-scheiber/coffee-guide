@@ -1,146 +1,72 @@
-# ☕ Coffee Guide
+# Coffee Guide
 
-A personal web app for quickly accessing espresso settings for different coffee beans and grinders on your phone.
+A small Next.js app that lists espresso settings for each coffee bean and grinder I use. It is written to be read on a phone while the machine is warming up.
 
-**🌐 Live Site:** [coffee.thomasscheiber.com](https://coffee.thomasscheiber.com)
+The app has no database, no API routes and no environment variables. Every page is static content in a React component.
 
-## 🎯 Purpose
+## What it contains
 
-This web app helps me remember and quickly access the correct espresso settings for:
-- **Different coffee beans** (Gota Blend, Vienna Calling, and future beans)
-- **Two different grinders**:
-  - Sage Barista Touch integrated grinder
-  - Timemore Sculptor 078s (Black) external grinder
-- **Double shot espresso** for milk-based drinks (cappuccino, latte macchiato)
+The home page links to one guide per bean and grinder pair, four guides in total.
 
-Perfect for checking settings from your phone while making your morning coffee!
+| Bean | Integrated grinder (Sage Barista Touch) | Timemore Sculptor 078s |
+| --- | --- | --- |
+| Gota Blend (Gota Coffee, Vienna) | `/beans/gota-blend/integrated-grinder` | `/beans/gota-blend/timemore-sculptor` |
+| Vienna Calling (Wildkaffee, Vienna) | `/beans/vienna-calling/integrated-grinder` | `/beans/vienna-calling/timemore-sculptor` |
 
-## ✨ Features
+Each guide has the same parts:
 
-### 🎨 Modern UI/UX
-- **Smooth animations** - Fade-in effects, staggered element loading, and interactive hover states
-- **Responsive design** - Fully mobile-first, adapts seamlessly from phone to desktop
-- **Interactive cards** - Hover effects with shimmer animations and elevation
-- **Beautiful gradients** - Color-coded sections (Amber for Gota Blend, Purple for Vienna Calling)
-- **Touch-friendly** - Optimized tap targets and spacing for mobile devices
+- A table of starting settings for a double shot, such as dose, grind position and extraction time.
+- A step-by-step dialing-in routine.
+- Milk drink notes for cappuccino and latte macchiato, and a section on the Barista Touch Auto MilQ system.
 
-### 📖 Content
-- Organized by bean type, then grinder
-- Detailed dialing-in instructions with step-by-step guides
-- Extraction parameters and troubleshooting tips
-- Milk frothing tips for the Barista Touch Auto MilQ system
-- Professional images with hover effects
+The two Gota Blend guides also list adjustments for shots that run too fast, too slow, sour or bitter.
 
-### ⚡ Performance
-- Pure CSS animations (60fps, no JavaScript overhead)
-- Hardware-accelerated transitions
-- Optimized Next.js Image component
-- Static site generation for fast loading
+The Vienna Calling guides also list the roast and origins (El Salvador, Colombia, Rwanda).
 
-## 🫘 Current Beans
+## Stack
 
-### Gota Blend (Vienna)
-- Medium roast from Gota Coffee, Vienna
-- Guides for both integrated and Timemore grinders
+- Next.js ^16.4.6 with the App Router
+- React ^19.3.1
+- TypeScript ^6.0.3
+- Tailwind CSS ^4.3.5 through `@tailwindcss/postcss`, plus hand-written keyframe animations in `app/globals.css`
+- ESLint 10 with `typescript-eslint` and `eslint-config-next`
 
-### Vienna Calling (Wildkaffee Vienna)
-- Medium-dark roast blend
-- 100% Arabica (El Salvador, Colombia, Rwanda)
-- Flavor: Chocolatey, Sweet, Berry notes
-- Guides for both integrated and Timemore grinders
+Machine photos in `public/images` go through the `next/image` component.
 
-## 🚀 Quick Start
+TypeScript is held at 6.x because `typescript-eslint` does not support TypeScript 7 yet, and `bun run lint` fails with it.
+
+## Run it
+
+Bun is the package manager (`bun.lock`).
 
 ```bash
-# Install dependencies
-npm install
-
-# Run development server
-npm run dev
-
-# Build for production
-npm run build
+bun install
+bun run dev      # development server on http://localhost:3000
+bun run build    # production build
+bun run start    # serve the production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the app in development mode.
+Other scripts:
 
-## 🚀 Automated Deployment
-
-This project uses GitHub Actions for automated deployment to an FTP server. Every time you push to the `main` branch, the workflow will:
-
-1. **Install dependencies** using `npm ci`
-2. **Build the static site** using `npm run build` 
-3. **Deploy to FTP server** automatically
-
-### Setup FTP Deployment
-
-To enable automatic deployment, add these secrets to your GitHub repository:
-
-1. Go to **Settings** → **Secrets and variables** → **Actions**
-2. Add these repository secrets:
-   - `FTP_SERVER` - Your FTP server address
-   - `FTP_USERNAME` - Your FTP username  
-   - `FTP_PASSWORD` - Your FTP password
-
-The workflow file is located at `.github/workflows/deploy.yml` and is configured to:
-- Deploy the `out/` directory (Next.js static export output)
-- Exclude unnecessary files (git, node_modules, etc.)
-- Run on every push to the main branch
-
-## 📂 Project Structure
-
-```
-app/
-  ├── beans/
-  │   ├── gota-blend/
-  │   │   ├── integrated-grinder/
-  │   │   └── timemore-sculptor/
-  │   └── vienna-calling/
-  │       ├── integrated-grinder/
-  │       └── timemore-sculptor/
-  ├── page.tsx (home page)
-  └── globals.css
+```bash
+bun run lint
+bun run typecheck
+bun run test
 ```
 
-## ➕ Adding New Beans
+`bun run test` needs a production build first. The single test in `tests/production.test.mjs` starts `next start` on port 4317, then checks that the home page and all four guides return 200, that each guide has a settings table, that linked images and icons load, and that an unknown guide path returns 404.
 
-To add a new bean variety:
+## Deployment
 
-1. Create a new folder under `app/beans/[bean-name]/`
-2. Add two subfolders: `integrated-grinder/` and `timemore-sculptor/`
-3. Copy a `page.tsx` from an existing guide and modify the settings
-4. Update the home page (`app/page.tsx`) to add links to the new guides
+`nixpacks.toml` builds the app with `bun install` and `bun run build`, and starts it with `bunx next start -H 0.0.0.0`. The repository has no other deploy configuration.
 
-## 🛠️ Tech Stack
+## Adding a bean
 
-- **Next.js 15.5** - Modern React framework with App Router
-- **React 18** - Latest React with server components
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first CSS framework
-- **CSS Animations** - Custom keyframe animations for smooth UX
-- **Static Export** - Optimized for hosting on any static server
+1. Copy an existing folder under `app/beans/`, for example `app/beans/gota-blend`, to `app/beans/<new-bean>`.
+2. Edit the `page.tsx` file in each grinder folder with the new settings.
+3. Add the two links to `app/page.tsx`.
+4. Add the new routes to the list in `tests/production.test.mjs`.
 
-### Design Features
-- Mobile-first responsive design
-- CSS Grid & Flexbox layouts
-- Custom animation keyframes (fadeIn, slideIn, bounce, pulse)
-- Hardware-accelerated transforms
-- Gradient backgrounds and shadows
-- Interactive hover states
+## License
 
-## 🎯 Key Highlights
-
-- **Clean Architecture** - Organized file structure following Next.js 15 App Router best practices
-- **Type Safety** - Full TypeScript implementation for robust code
-- **Accessibility** - Semantic HTML and proper contrast ratios maintained
-- **Performance** - Optimized animations running at 60fps with CSS-only approach
-- **Scalability** - Easy to add new coffee beans and grinder configurations
-- **User Experience** - Smooth transitions, loading states, and interactive feedback
-
-## 📄 License
-
-MIT License - See LICENSE file for details
-
----
-
-Made with ☕ for better espresso
+MIT, see `LICENSE`.
